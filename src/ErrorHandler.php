@@ -33,8 +33,8 @@ class ErrorHandler
     ];
     public array $mensajes = [];
     private string $memory;
-    private string $to_log = true;
-    private string $to_screen = false;
+    private bool $to_log = true;
+    private bool $to_screen = false;
     private string $usuario;
 
     public function __construct() {
