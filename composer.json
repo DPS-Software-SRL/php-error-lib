@@ -1,0 +1,19 @@
+{
+    "name": "dps-software-srl/php-error-lib",
+    "description": "Gestor de errores",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Dps\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "DPS"
+        }
+    ],
+    "require": {
+        "kint-php/kint": "^5.0",
+        "cekurte/environment": "^0.3.0"
+    }
+}
