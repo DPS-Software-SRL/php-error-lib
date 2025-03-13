@@ -68,12 +68,7 @@ class ErrorToDiscord extends ErrorHandler
                 $tipo     = $mensaje['errType'];
                 $repetido = ( $mensaje['count'] > 1 ) ? ". Repetido {$mensaje['count']} veces" : '';
 
-                $trace = "";
-                if( count( $mensaje['trace'] ) > 0 ) {
-                    foreach ($mensaje['trace'] as $t) {
-                        $trace .= "\n{$t['file']} ({$t['line']})";
-                    }
-                }
+                $trace = implode( "\n", $mensaje['trace'] );
 
                 $embeds[] = [
                     'timestamp'   => date('c'),
