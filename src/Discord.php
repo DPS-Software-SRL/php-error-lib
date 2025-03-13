@@ -9,16 +9,17 @@ use Cekurte\Environment\Environment as env;
  * @author https://github.com/denchik5133/discord-webhook-sender
  */
 class Discord {
-    private $webhookUrl;
-    private $cooldownTime = 3; // Time delay between requests in seconds
+    private string $webhookUrl;
+    private int $cooldownTime = 3; // Time delay between requests in seconds
     // File for storing the time of the last message sent
-    private $lastSendTimeFile = sys_get_temp_dir() . '/dpsDiscordSendTime.txt' ;
+    private string $lastSendTimeFile;
 
     /**
      * Crea un lanzador de mensajes a un canal de discord
      * @param string $webhookUrl URL del webhook entregada por discord
      */
     public function __construct( string $webhookUrl = null) {
+        $this->lastSendTimeFile = sys_get_temp_dir() . '/dpsDiscordSendTime.txt' ;
         $this->webhookUrl = $webhookUrl ?? env::get( 'DISCORD_WEBHOOK_URL', null );
     }
 
