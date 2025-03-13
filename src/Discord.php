@@ -12,7 +12,7 @@ class Discord {
     private $webhookUrl;
     private $cooldownTime = 3; // Time delay between requests in seconds
     // File for storing the time of the last message sent
-    private $lastSendTimeFile = tempnam(sys_get_temp_dir(), 'dps_discord_');
+    private $lastSendTimeFile = sys_get_temp_dir() . '/dpsDiscordSendTime.txt' ;
 
     /**
      * Crea un lanzador de mensajes a un canal de discord
