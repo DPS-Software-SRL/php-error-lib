@@ -127,7 +127,14 @@ class ErrorHandler
      */
     private function toScreen() {
         if( $this->to_screen ) {
-            debug( $this->err );
+            if( function_exists('debug') ) {
+                debug( $this->err );
+                
+            } else {
+                echo "<pre>"; 
+                var_dump( $this->err );                
+                echo "</pre>";
+            }
         }              
     }
 
