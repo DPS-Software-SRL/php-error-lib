@@ -3,6 +3,7 @@
 namespace Dps;
 
 use Cekurte\Environment\Environment as env;
+use Kint;
 
 /**
  * clase Errorhandler para el manejo de errores 
@@ -32,6 +33,7 @@ class ErrorHandler
        16384 => "USER DEPRECATED"
     ];
     public array $mensajes = [];
+    private string $log_path = '';
     private string $memory;
     private bool $to_log = true;
     private bool $to_screen = false;
@@ -40,7 +42,6 @@ class ErrorHandler
     public function __construct() {
         $this->to_log         = env::get('ERROR_LOG_ENABLED', true);
         $this->to_screen      = env::get('ERROR_LOG_TO_SCREEN', false);
-        $this->usuario        = $_SESSION['UsuarioConectado'] ?? 'sinUsuario';
 
         // Me guardo un poco de memoria, por las dudas, para ser usada en shutdown()
         $this->memory = str_repeat('*', 3 * 1024 * 1024); // 3mb
@@ -90,13 +91,18 @@ class ErrorHandler
      * @return void
      */
     private function save( int $errNo, string $errMsg = '', string $file = '', int $line = 0, array $trace = [] ) {
+        $miniTrace = [];
+        foreach ($trace as $t) {
+            $miniTrace[] = [ "{$t['file']} ({$t['line']})" ]; 
+        }
+
         $this->err = [
             'errNo'   => $errNo,
             'errType' => $this->errType[$errNo],
             'errMsg'  => $errMsg,
             'file'    => $file,
             'line'    => $line,
-            'trace'   => $trace,
+            'trace'   => $miniTrace,
             'count'   => 1
         ];
 
@@ -116,6 +122,12 @@ class ErrorHandler
      */
     private function toLog() {
         if( $this->to_log ) {
+
+            $this->usuario  = $_SESSION['UsuarioConectado'] ?? 'sinUsuario';
+            $fullPath = "{$this->log_path}/{$this->usuario}.log";
+            ini_set("error_log", $fullPath );
+
+            
             error_log( "[{$this->err['errType']}] {$this->err['errMsg']} {$this->err['file']} ({$this->err['line']})" );
         }
     }
@@ -127,14 +139,7 @@ class ErrorHandler
      */
     private function toScreen() {
         if( $this->to_screen ) {
-            if( function_exists('debug') ) {
-                debug( $this->err );
-                
-            } else {
-                echo "<pre>"; 
-                var_dump( $this->err );                
-                echo "</pre>";
-            }
+            Kint::dump( $this->err );
         }              
     }
 
@@ -148,12 +153,8 @@ class ErrorHandler
     
         if( ! file_exists( $path ) )
           mkdir( $path, 0755, true);        
-            
-        $fullPath = "{$path}/{$this->usuario}.log";
-    
-        $this->log_path = $fullPath;
         
-        ini_set("error_log", $fullPath );
+        $this->log_path = $path;       
     }
 
 
