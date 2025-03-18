@@ -3,6 +3,7 @@
 namespace Dps;
 
 use Cekurte\Environment\Environment as env;
+use \Exception;
 use Kint;
 
 /**
@@ -15,6 +16,7 @@ use Kint;
 class ErrorHandler
 {
     public $err;
+    private Exception $ex;
     private $errType = [
            1 => "ERROR",
            2 => "WARNING",
@@ -58,6 +60,7 @@ class ErrorHandler
 
 
     public function exception_handler( $ex ) {
+        $this->ex = $ex;
         $this->procesar( E_ERROR, $ex->getMessage(), $ex->getFile(), $ex->getLine(), $ex->getTrace() );
         die;
     }
