@@ -3,7 +3,6 @@
 namespace Dps;
 
 use Cekurte\Environment\Environment as env;
-use \Exception;
 use Kint;
 
 /**
@@ -15,8 +14,7 @@ use Kint;
  */
 class ErrorHandler
 {
-    public $err;
-    private Exception $ex;
+    public $err;    
     private $errType = [
            1 => "ERROR",
            2 => "WARNING",
@@ -60,8 +58,24 @@ class ErrorHandler
 
 
     public function exception_handler( $ex ) {
-        $this->ex = $ex;
         $this->procesar( E_ERROR, $ex->getMessage(), $ex->getFile(), $ex->getLine(), $ex->getTrace() );
+
+        if( get_class( $ex ) == 'Dps\MysqlException' ) {
+
+            global $smarty;
+            
+            if( $smarty ) {        
+                $nro   = $ex->MysqlNro;
+                $texto = MysqlMessages::getMsg( $nro ) ?? $ex->MysqlError;
+        
+                $_GET['sinMenu'] = 1;
+                http_response_code(406);
+                $smarty->assign( "soloCerrar", true );
+                $smarty->assign( "mensaje", "<span style='color:red;font-size:xx-small;'>- $nro -</span><br>$texto" );
+                $smarty->mostrar( "mensajeerror.tpl" );
+            }              
+        }        
+        
         die;
     }
 
@@ -81,24 +95,6 @@ class ErrorHandler
         $this->save( $errNo, $errMsg, $file, $line, $trace );
         $this->toLog();
         $this->toScreen();
-
-        if( get_class( $this->ex ) == 'Dps\MysqlException' ) {
-
-            global $smarty;
-            
-            if( $smarty ) {        
-                $nro   = $this->ex->MysqlNro;
-                $texto = MysqlMessages::getMsg( $nro ) ?? $this->ex->MysqlError;
-        
-                $_GET['sinMenu'] = 1;
-                http_response_code(406);
-                $smarty->assign( "soloCerrar", true );
-                $smarty->assign( "mensaje", "<span style='color:red;font-size:xx-small;'>- $nro -</span><br>$texto" );
-                $smarty->mostrar( "mensajeerror.tpl" );
-                die;
-            }              
-        }        
-
     }
 
 
