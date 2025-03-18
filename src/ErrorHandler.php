@@ -78,6 +78,24 @@ class ErrorHandler
         $this->save( $errNo, $errMsg, $file, $line, $trace );
         $this->toLog();
         $this->toScreen();
+
+        if( get_class( $this->ex ) == 'Dps\MysqlException' ) {
+
+            global $smarty;
+            
+            if( $smarty ) {        
+                $nro   = $this->ex->MysqlNro;
+                $texto = MysqlMessages::getMsg( $nro ) ?? $this->ex->MysqlError;
+        
+                $_GET['sinMenu'] = 1;
+                http_response_code(406);
+                $smarty->assign( "soloCerrar", true );
+                $smarty->assign( "mensaje", "<span style='color:red;font-size:xx-small;'>- $nro -</span><br>$texto" );
+                $smarty->mostrar( "mensajeerror.tpl" );
+                die;
+            }              
+        }        
+
     }
 
 
