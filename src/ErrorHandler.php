@@ -110,7 +110,10 @@ class ErrorHandler
     private function save( int $errNo, string $errMsg = '', string $file = '', int $line = 0, array $trace = [] ) {
         $miniTrace = [];
         foreach ($trace as $t) {
-            $miniTrace[] = "{$t['file']} ({$t['line']})"; 
+            
+            $f = $t['file'] ?? '';
+            $l = $t['line'] ?? '';
+            $miniTrace[] = "{$f} ({$l})"; 
         }
 
         $this->err = [

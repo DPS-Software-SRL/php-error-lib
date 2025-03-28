@@ -1,7 +1,16 @@
 # php-error-lib
+
 Gestor de errores 
 
-* Captura FATAL errors, por Time Limit o Allowed Memory Size
+Captura FATAL errors, por Time Limit o Allowed Memory Size
+
+
+Al constructor se le puede enviar un string con el nombre de la APP que luego sera visible en los envios a Discord
+```
+new Dps\ErrorToDiscord( 'Puma ARG Incidencias' );
+```
+
+
 
 Agrupa los errores repetidos para no saturar Discord.
 Y los envia en bloques de a 10 ( por el limite de embbeds de Discord webhook )
@@ -19,6 +28,9 @@ Y los envia en bloques de a 10 ( por el limite de embbeds de Discord webhook )
   
 * DISCORD_WEBHOOK_URL (string|null)
   Opcionalmente envia los mensajes a un canal de Discord
+
+* ENVIRONMENT
+  
 
 
 **Metodos utiles

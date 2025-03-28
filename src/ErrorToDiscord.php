@@ -10,6 +10,7 @@ use Dps\Discord;
  */
 class ErrorToDiscord extends ErrorHandler
 {
+    private string $appName;
     private Discord $D;
     private $reporting = E_ALL;
     private $colors = [
@@ -31,11 +32,13 @@ class ErrorToDiscord extends ErrorHandler
     ];
 
 
-    public function __construct()
+    public function __construct( string $appName = '' )
     {
-        parent::__construct();
+        parent::__construct( );
 
         $this->D = new Discord();
+        
+        $this->appName = $appName;
 
         register_shutdown_function( [ $this, 'shutdown2' ] );
     }
@@ -80,6 +83,14 @@ class ErrorToDiscord extends ErrorHandler
                     ],
                     "fields" => [
                         [
+                            "name" => "App",
+                            "value" => $this->appName ?? '?',
+                            "inline" => true
+                        ],[
+                            "name" => "Environment",
+                            "value" => $_ENV['ENVIRONMENT'] ?? '?',
+                            "inline" => true
+                        ],[
                             "name" => "Trace",
                             "value" => $trace
                         ]
