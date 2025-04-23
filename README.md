@@ -5,9 +5,11 @@ Gestor de errores
 Captura FATAL errors, por Time Limit o Allowed Memory Size
 
 
-Al constructor se le puede enviar un string con el nombre de la APP que luego sera visible en los envios a Discord
+Al constructor se le puede enviar opcionalmente
+ * un string con el nombre de la APP que luego sera visible en los envios a Discord
+ * Una URL webhook de Discord para el envio de los mensajes. Este valor tendrá prioridad sobre el encontrado en .env
 ```
-new Dps\ErrorToDiscord( 'Puma ARG Incidencias' );
+new Dps\ErrorToDiscord( [ 'Puma ARG Incidencias' ] [, $urlWebhook ] );
 ```
 
 
