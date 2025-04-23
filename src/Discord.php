@@ -19,8 +19,14 @@ class Discord {
      * @param string $webhookUrl URL del webhook entregada por discord
      */
     public function __construct( string $webhookUrl = null) {
+        $this->webhookUrl = env::get( 'DISCORD_WEBHOOK_URL', '' );
+
+        // Checking Webhook URLs
+        if (empty($this->webhookUrl) || !filter_var($this->webhookUrl, FILTER_VALIDATE_URL)) {
+            throw new \Exception('Invalid webhook URL en .env { DISCORD_WEBHOOK_URL }');
+        }
+
         $this->lastSendTimeFile = sys_get_temp_dir() . '/dpsDiscordSendTime.txt' ;
-        $this->webhookUrl = $webhookUrl ?? env::get( 'DISCORD_WEBHOOK_URL', null );
     }
 
 
@@ -56,11 +62,6 @@ class Discord {
     public function sendMessage($content, $embeds = [], $username = null, $avatarUrl = null) {
         // Applying a delay between requests
         $this->applyCooldown();
-
-        // Checking Webhook URLs
-        if (empty($this->webhookUrl) || !filter_var($this->webhookUrl, FILTER_VALIDATE_URL)) {
-            throw new \Exception('Invalid Webhook URL');
-        }
 
         $payload = [
             'content'    => $content,
