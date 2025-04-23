@@ -32,11 +32,11 @@ class ErrorToDiscord extends ErrorHandler
     ];
 
 
-    public function __construct( string $appName = '' )
+    public function __construct( string $appName = '', string $webhookDiscord = '' )
     {
         parent::__construct( );
 
-        $this->D = new Discord();
+        $this->D = new Discord( $webhookDiscord );
         
         $this->appName = $appName;
 
