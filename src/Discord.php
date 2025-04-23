@@ -18,8 +18,14 @@ class Discord {
      * Crea un lanzador de mensajes a un canal de discord
      * @param string $webhookUrl URL del webhook entregada por discord
      */
-    public function __construct( string $webhookUrl = null) {
-        $this->webhookUrl = env::get( 'DISCORD_WEBHOOK_URL', '' );
+    public function __construct( string $webhookUrl = '') {
+        
+        if( ! empty( $webhookUrl ) ) {
+            $this->webhookUrl = $webhookUrl;
+            
+        } else {
+            $this->webhookUrl = env::get( 'DISCORD_WEBHOOK_URL', '' );            
+        }
 
         // Checking Webhook URLs
         if (empty($this->webhookUrl) || !filter_var($this->webhookUrl, FILTER_VALIDATE_URL)) {
