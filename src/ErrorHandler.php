@@ -171,7 +171,7 @@ class ErrorHandler
     private function setLogPath() {  
         $path = env::get('PATH_LOG', '/tmp') . date('/Y/m/d');
     
-        if( ! file_exists( $path ) )
+        if( ! is_dir( $path ) )
           mkdir( $path, 0755, true);        
         
         $this->log_path = $path;       
