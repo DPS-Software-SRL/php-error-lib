@@ -169,10 +169,20 @@ class ErrorHandler
      * @return void
      */
     private function setLogPath() {  
-        $path = env::get('PATH_LOG', '/tmp') . date('/Y/m/d');
-    
-        if( ! is_dir( $path ) )
-          @mkdir( $path, 0755, true);        
+        // los cron ejecutados a cada minuto, se solapaban, e intentaban todos crear la misma carpeta.
+        // por eso utilizo el mecanismo de FLOCK para que solo uno logre crear la carpeta.
+        $lockFile = fopen('/tmp/lock_mkdir_cron', 'c'); // Archivo de control
+        
+        if (flock($lockFile, LOCK_EX)) {
+            $path = env::get('PATH_LOG', '/tmp') . date('/Y/m/d');
+        
+            if( ! is_dir( $path ) )
+              @mkdir( $path, 0755, true);        
+           
+            flock($lockFile, LOCK_UN); // Liberar el bloqueo
+        }
+
+        fclose($lockFile);
         
         $this->log_path = $path;       
     }
