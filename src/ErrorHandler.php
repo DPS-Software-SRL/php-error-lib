@@ -202,6 +202,11 @@ class ErrorHandler
         
         if ($error) {        
             $this->procesar( $error["type"], $error['message'], $error['file'], $error['line'] );
+
+            // Envio un segundo mensaje con algo de info de donde sucedio el error
+            $php = array_unique([ $_SERVER['PHP_SELF'], $_SERVER['REQUEST_URI'] ]);
+            $this->procesar( $error["type"], "Trace: " . implode("\n", $php) . "\n", $error['file'], $error['line'] );
+            
             http_response_code(500);
         }
     }    
