@@ -33,10 +33,10 @@ class ErrorHandler
        16384 => "USER DEPRECATED"
     ];
     public array $mensajes = [];
-    private string $log_path = '';
+    private string $log_path  = '';
     private string $memory;
-    private bool $to_log = true;
-    private bool $to_screen = false;
+    private bool   $to_log    = true;
+    private bool   $to_screen = false;
     private string $usuario;
 
     public function __construct() {
@@ -142,12 +142,7 @@ class ErrorHandler
      */
     private function toLog() {
         if( $this->to_log ) {
-
-            $this->usuario  = $_SESSION['UsuarioConectado'] ?? 'sinUsuario';
-            $fullPath = "{$this->log_path}/{$this->usuario}.log";
-            ini_set("error_log", $fullPath );
-
-            
+            $this->setFullpathLog();
             error_log( "[{$this->err['errType']}] {$this->err['errMsg']} {$this->err['file']} ({$this->err['line']})" );
         }
     }
@@ -187,6 +182,18 @@ class ErrorHandler
         $this->log_path = $path;       
     }
 
+
+    /**
+     * Configura el archivo de log, segun el usuario conectado
+     * @return void
+     * @todo Evitar que el valor se tome de SESSION
+     */
+     private function setFullpathLog() {
+        $this->usuario  = $_SESSION['UsuarioConectado'] ?? 'sinUsuario';
+        $fullPath = "{$this->log_path}/{$this->usuario}.log";
+        ini_set("error_log", $fullPath );
+    }
+    
 
     /**
      * Esta funcion se ejecuta al final de cada script
