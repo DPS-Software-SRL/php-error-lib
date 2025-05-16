@@ -180,6 +180,8 @@ class ErrorHandler
         fclose($lockFile);
         
         $this->log_path = $path;       
+
+        $this->setFullpathLog();
     }
 
 
