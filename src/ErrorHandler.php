@@ -191,7 +191,7 @@ class ErrorHandler
      * @todo Evitar que el valor se tome de SESSION
      */
      private function setFullpathLog() {
-        $this->usuario  = $_SESSION['UsuarioConectado'] ?? 'sinUsuario';
+        $this->usuario  = ( ! isset( $_SESSION['UsuarioConectado'] ) || ! $_SESSION['UsuarioConectado'] ) ? 'sinUsuario' : $_SESSION['UsuarioConectado'];
         $fullPath = "{$this->log_path}/{$this->usuario}.log";
         ini_set("error_log", $fullPath );
     }
@@ -221,7 +221,7 @@ class ErrorHandler
     }    
     
     public function getUsuario() {
-        return $this->usuario;
+        return ( $this->usuario ) ? $this->usuario : 'sinUsuario';
     }
 
 }
