@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "kint-php/kint": "^5.0",
+        "kint-php/kint": "^6.0",
         "cekurte/environment": "^0.3.0",
         "dps-software-srl/php-mysql-lib": "^1.0"
     }
