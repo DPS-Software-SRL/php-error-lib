@@ -72,6 +72,10 @@ class ErrorToDiscord extends ErrorHandler
                 $repetido = ( $mensaje['count'] > 1 ) ? ". Repetido {$mensaje['count']} veces" : '';
 
                 $trace = implode( "\n", $mensaje['trace'] );
+                // Discord limita el tamaño de los Fields a 1024
+                if( strlen( $trace ) > 1024 ) {
+                    $trace = substr( $trace, 0, 509 ) . '\n...\n' . substr( $trace, -509 );
+                }
 
                 $embeds[] = [
                     'timestamp'   => date('c'),
